@@ -30,15 +30,6 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
         role: isUserExist.role
     }
     const  accessToken = generateToken(jwtPayload, envVars.JWT_ACCESS_SECRET, envVars.JWT_ACCESS_EXPIRES)
-
-    const refreshToken = generateToken(jwtPayload, envVars.JWT_REFRESH_SECRET, envVars.JWT_REFRESH_EXPIRED)
-
-    delete isUserExist.password;
-    
-    return {
-        accessToken,
-        refreshToken,
-        user: isUserExist
     }
 }
 
