@@ -168,4 +168,4 @@ This project is open-sourced under the [MIT License](LICENSE).
 
 ## ✍️ Author
 
-* Developed by \[Your Name Here]
+* Developed by \Arifur Rahman
