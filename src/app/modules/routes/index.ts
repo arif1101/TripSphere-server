@@ -3,6 +3,8 @@ import { UserRoutes } from "../user/user.route";
 import { AuthRoutes } from "../auth/auth.route";
 import { TourRoutes } from "../tour/Tour.route";
 import { DivisionRoutes } from "../division/division.route";
+import { BookingRoutes } from "../booking/booking.route";
+import { PaymentRoutes } from "../payment/payment.route";
 
 export const router = Router()
 
@@ -22,8 +24,15 @@ const moduleRoutes = [
     {
         path: "/division",
         route: DivisionRoutes
+    },
+    {
+        path: "/booking",
+        route: BookingRoutes
+    },
+    {
+        path: "/payment",
+        route: PaymentRoutes
     }
-
 ]
 
 moduleRoutes.forEach((route) => {
