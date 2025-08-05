@@ -7,7 +7,7 @@ import httpStatus from "http-status-codes"
 import { authServices } from "./auth.service"
 import AppError from "../../errorHelpers/AppError"
 import { setAuthCookie } from "../utils/setCookie"
-import { JwtPayload } from "jsonwebtoken"
+import { Jwt, JwtPayload } from "jsonwebtoken"
 import { createUserTokens } from "../utils/userTokens"
 import { envVars } from "../../config/env"
 import passport from "passport"
@@ -83,13 +83,13 @@ const logout = catchAsync(async (req: Request, res: Response, next: NextFunction
     })
 })
 
-const resetPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const changePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
     const newPassword = req.body.newPassword;
     const oldPassword = req.body.oldPassword;
     const decodedToken = req.user
 
-    await authServices.resetPassword(oldPassword, newPassword, decodedToken as JwtPayload);
+    await authServices.changePassword(oldPassword, newPassword, decodedToken as JwtPayload);
 
     sendResponse(res, {
         success: true,
@@ -97,6 +97,25 @@ const resetPassword = catchAsync(async (req: Request, res: Response, next: NextF
         message: "Password Changed Successfully",
         data: null,
     })
+})
+
+const setPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload
+    const {password} = req.body
+
+    await authServices.setPassword(decodedToken.userId, password)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Password Changed Successfully",
+        data: null,
+    })
+})
+
+
+const resetPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    return
 })
 
 const googleCallbackController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -127,5 +146,7 @@ export const AuthControllers = {
     getNewAccessToken,
     logout,
     resetPassword,
-    googleCallbackController
+    setPassword,
+    googleCallbackController,
+    changePassword
 }
