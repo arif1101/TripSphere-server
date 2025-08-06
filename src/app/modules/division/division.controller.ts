@@ -1,66 +1,60 @@
-import { catchAsync } from "../utils/catchAsync";
-import { Response, Request } from "express";
-import { sendResponse } from "../utils/sendResponse";
-import { DivisionService } from "./division.service";
+import { Request, Response } from "express";
 import { IDivision } from "./division.interface";
+import { DivisionService } from "./division.service";
+import { catchAsync } from "../utils/catchAsync";
+import { sendResponse } from "../utils/sendResponse";
 
-
-
-const getAllDivisions = catchAsync(async (req: Request, res: Response) => {
-    const result = await DivisionService.getAllDivisions();
-    sendResponse(res, {
-        statusCode: 200,
-        success: true,
-        message: "Division reterived",
-        data: result.data,
-        meta: result.meta
-    })
-})
-
-
-const createDivision = catchAsync(async(req: Request, res: Response) => {
-    const payload : IDivision = {
+const createDivision = catchAsync(async (req: Request, res: Response) => {
+    console.log(req.file);
+    const payload: IDivision = {
         ...req.body,
         thumbnail: req.file?.path
     }
-    
-    const result = await DivisionService.createDivision(payload)
-
+    const result = await DivisionService.createDivision(payload);
     sendResponse(res, {
         statusCode: 201,
         success: true,
         message: "Division created",
-        data: result
-    })
-})
+        data: result,
+    });
+});
 
-const getSingleDivision = catchAsync(async(req: Request, res: Response) => {
+const getAllDivisions = catchAsync(async (req: Request, res: Response) => {
+    const query = req.query;
+    const result = await DivisionService.getAllDivisions(query as Record<string, string>);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Divisions retrieved",
+        data: result.data,
+        meta: result.meta,
+    });
+});
+const getSingleDivision = catchAsync(async (req: Request, res: Response) => {
     const slug = req.params.slug
     const result = await DivisionService.getSingleDivision(slug);
     sendResponse(res, {
         statusCode: 200,
         success: true,
-        message: "Divisions retrived",
-        data: result.data
+        message: "Divisions retrieved",
+        data: result.data,
     });
 });
 
-const updateDivision = catchAsync(async(req: Request, res: Response) => {
+const updateDivision = catchAsync(async (req: Request, res: Response) => {
     const id = req.params.id;
-
-    const payload : IDivision = {
+    const payload: IDivision = {
         ...req.body,
         thumbnail: req.file?.path
     }
-    
     const result = await DivisionService.updateDivision(id, payload);
     sendResponse(res, {
         statusCode: 200,
         success: true,
         message: "Division updated",
-        data: result
-    })
-})
+        data: result,
+    });
+});
 
 const deleteDivision = catchAsync(async (req: Request, res: Response) => {
     const result = await DivisionService.deleteDivision(req.params.id);
@@ -77,5 +71,5 @@ export const DivisionController = {
     getAllDivisions,
     getSingleDivision,
     updateDivision,
-    deleteDivision
-}
+    deleteDivision,
+};

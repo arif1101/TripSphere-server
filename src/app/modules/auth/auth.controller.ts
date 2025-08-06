@@ -4,13 +4,13 @@ import { catchAsync } from "../utils/catchAsync"
 import { Response, Request, NextFunction } from "express"
 import { sendResponse } from "../utils/sendResponse"
 import httpStatus from "http-status-codes"
-import { authServices } from "./auth.service"
 import AppError from "../../errorHelpers/AppError"
 import { setAuthCookie } from "../utils/setCookie"
 import { Jwt, JwtPayload } from "jsonwebtoken"
 import { createUserTokens } from "../utils/userTokens"
 import { envVars } from "../../config/env"
 import passport from "passport"
+import { AuthServices } from "./auth.service"
 
 
 const credentialsLogin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -49,7 +49,7 @@ const getNewAccessToken = catchAsync(async (req: Request, res: Response, next: N
     if(!refreshToken){
         throw new AppError(httpStatus.BAD_REQUEST, "No refresh token recieved form cookies")
     }
-    const tokenInfo = await authServices.getNewAccessToken(refreshToken as string)
+    const tokenInfo = await AuthServices.getNewAccessToken(refreshToken as string)
 
     setAuthCookie(res, tokenInfo)
     
@@ -89,7 +89,7 @@ const changePassword = catchAsync(async (req: Request, res: Response, next: Next
     const oldPassword = req.body.oldPassword;
     const decodedToken = req.user
 
-    await authServices.changePassword(oldPassword, newPassword, decodedToken as JwtPayload);
+    await AuthServices.changePassword(oldPassword, newPassword, decodedToken as JwtPayload);
 
     sendResponse(res, {
         success: true,
@@ -103,7 +103,7 @@ const setPassword = catchAsync(async (req: Request, res: Response, next: NextFun
     const decodedToken = req.user as JwtPayload
     const {password} = req.body
 
-    await authServices.setPassword(decodedToken.userId, password)
+    await AuthServices.setPassword(decodedToken.userId, password)
 
     sendResponse(res, {
         success: true,
@@ -118,7 +118,7 @@ const resetPassword = catchAsync(async (req: Request, res: Response, next: NextF
 
     const decodedToken = req.user
 
-    await authServices.resetPassword(req.body, decodedToken as JwtPayload);
+    await AuthServices.resetPassword(req.body, decodedToken as JwtPayload);
 
     sendResponse(res, {
         success: true,
@@ -133,7 +133,7 @@ const forgotPassword = catchAsync(async (req: Request, res: Response, next: Next
 
     const { email } = req.body;
 
-    await authServices.forgotPassword(email);
+    await AuthServices.forgotPassword(email);
 
     sendResponse(res, {
         success: true,
