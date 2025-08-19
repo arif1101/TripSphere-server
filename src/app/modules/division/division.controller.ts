@@ -1,4 +1,14 @@
 
+<<<<<<< HEAD
+const createDivision = catchAsync(async (req: Request, res: Response) => {
+    // console.log(req.file);
+    const payload: IDivision = {
+        ...req.body,
+        thumbnail: req.file?.path
+    }
+    const result = await DivisionService.createDivision(payload);
+=======
+>>>>>>> a0f77854f632e572c69954b6801cc907b9e262e3
     sendResponse(res, {
         statusCode: 201,
         success: true,
