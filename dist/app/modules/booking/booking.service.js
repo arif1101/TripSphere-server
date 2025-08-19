@@ -63,7 +63,7 @@ const createBooking = (payload, userId) => __awaiter(void 0, void 0, void 0, fun
             transactionId: transactionId
         };
         const sslPayment = yield sslCommerz_service_1.SSLService.sslPaymentInit(sslPayload);
-        console.log(sslPayment);
+        // console.log(sslPayment);
         yield session.commitTransaction(); //transaction
         session.endSession();
         return {
