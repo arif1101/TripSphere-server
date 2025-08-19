@@ -10,7 +10,6 @@ import { Jwt, JwtPayload } from "jsonwebtoken"
 import { createUserTokens } from "../utils/userTokens"
 import { envVars } from "../../config/env"
 import passport from "passport"
-import { AuthServices } from "./auth.service"
 
 
 const credentialsLogin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -48,10 +47,8 @@ const getNewAccessToken = catchAsync(async (req: Request, res: Response, next: N
     const refreshToken = req.cookies.refreshToken;
     if(!refreshToken){
         throw new AppError(httpStatus.BAD_REQUEST, "No refresh token recieved form cookies")
-    }
-    const tokenInfo = await AuthServices.getNewAccessToken(refreshToken as string)
-
-    setAuthCookie(res, tokenInfo)
+   =======
+    const tokenInfo = await authServices tokenInfo)
     
     sendResponse(res, { 
         success: true,
@@ -70,26 +67,18 @@ const logout = catchAsync(async (req: Request, res: Response, next: NextFunction
     })
 
     res.clearCookie("refreshToken", {
-        httpOnly: true,
+        httpOnly: true
         secure: false,
         sameSite: "lax"
     })
     
     sendResponse(res, { 
         success: true,
-        statusCode: httpStatus.OK,
-        message: "Logout Successfully",
-        data: null,
-    })
-})
-
-const changePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+        statusCode: httpStatu
 
     const newPassword = req.body.newPassword;
     const oldPassword = req.body.oldPassword;
     const decodedToken = req.user
-
-    await AuthServices.changePassword(oldPassword, newPassword, decodedToken as JwtPayload);
 
     sendResponse(res, {
         success: true,
@@ -102,9 +91,6 @@ const changePassword = catchAsync(async (req: Request, res: Response, next: Next
 const setPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const decodedToken = req.user as JwtPayload
     const {password} = req.body
-
-    await AuthServices.setPassword(decodedToken.userId, password)
-
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
@@ -118,7 +104,6 @@ const resetPassword = catchAsync(async (req: Request, res: Response, next: NextF
 
     const decodedToken = req.user
 
-    await AuthServices.resetPassword(req.body, decodedToken as JwtPayload);
 
     sendResponse(res, {
         success: true,
@@ -132,8 +117,6 @@ const forgotPassword = catchAsync(async (req: Request, res: Response, next: Next
 
 
     const { email } = req.body;
-
-    await AuthServices.forgotPassword(email);
 
     sendResponse(res, {
         success: true,
